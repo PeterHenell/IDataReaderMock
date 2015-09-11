@@ -107,10 +107,10 @@ namespace DataReaderTest
             return GetFieldValue<double>(ordinal);
         }
 
-        public System.Collections.IEnumerator GetEnumerator()
-        {
-            return _enumerator;
-        }
+        //public System.Collections.IEnumerator GetEnumerator()
+        //{
+        //    return _enumerator;
+        //}
 
         public Type GetFieldType(int ordinal)
         {

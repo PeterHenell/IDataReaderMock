@@ -163,20 +163,20 @@ namespace DataReaderTest
             Assert.Fail("Should have thrown exception when trying to get value from ordinal that is out of range");
         }
 
-        [Test]
-        public void ShouldIterateOverCollection()
-        {
-            var customers = Builder<Customer>.CreateListOfSize(10).Build();
+        //[Test]
+        //public void ShouldIterateOverCollection()
+        //{
+        //    var customers = Builder<Customer>.CreateListOfSize(10).Build();
 
-            var col = new DataReaderCollection<Customer>(customers);
-            int counter = 0;
-            foreach (var item in col)
-            {
-                Console.WriteLine(item.GetType());
-                counter++;
-            }
-            Assert.That(counter, Is.EqualTo(10));
-        }
+        //    var col = new DataReaderCollection<Customer>(customers);
+        //    int counter = 0;
+        //    foreach (var item in col)
+        //    {
+        //        Console.WriteLine(item.GetType());
+        //        counter++;
+        //    }
+        //    Assert.That(counter, Is.EqualTo(10));
+        //}
 
         public class EmptyClass { }
 
