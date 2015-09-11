@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataReaderTest.Converters;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -11,24 +12,31 @@ namespace DataReaderTest
 {
     public class DataReaderCollection<T> : IDataReader
     {
-        DataTable _items;
-        int _current = -1;
+        GenericListToDataTableConverter<T> _converter = new GenericListToDataTableConverter<T>();
+
+        DataTable _schema;
+        IEnumerable<T> _items;
+        T _currentItem;
         bool _closed = false;
         Dictionary<string, int> _ordinals;
+        private IEnumerator<T> _enumerator;
 
         public DataReaderCollection(IEnumerable<T> items)
         {
-            _items = CreateDataTable(items);
-            _ordinals = PrepareOrdinals(_items);
+            _items = items;
+            _schema = _converter.CreateSchemaOnlyTable<T>();
+            _ordinals = GetOrdinalsFrom(_schema);
+            _enumerator = _items.GetEnumerator();
+            _currentItem = _enumerator.Current;
         }
 
         public DataReaderCollection(DataTable items)
         {
-            _items = items.Copy();
-            _ordinals = PrepareOrdinals(_items);
+            _schema = items.Copy();
+            _ordinals = GetOrdinalsFrom(_schema);
         }
 
-        private static Dictionary<string, int> PrepareOrdinals(DataTable table)
+        private static Dictionary<string, int> GetOrdinalsFrom(DataTable table)
         {
             var dict = new Dictionary<string, int>();
             for (int i = 0; i < table.Columns.Count; i++)
@@ -39,47 +47,6 @@ namespace DataReaderTest
             return dict;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <remarks>http://stackoverflow.com/questions/18746064/using-reflection-to-create-a-datatable-from-a-class</remarks>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        private static DataTable CreateDataTable(IEnumerable<T> list)
-        {
-            Type type = typeof(T);
-            var properties = type.GetProperties();
-
-            if (properties.Length == 0)
-            {
-                throw new ArgumentException("type does not have any properties");
-            }
-
-            DataTable dataTable = new DataTable();
-            foreach (PropertyInfo info in properties)
-            {
-                dataTable.Columns.Add(
-                    new DataColumn(
-                        info.Name,
-                        Nullable.GetUnderlyingType(info.PropertyType) ?? info.PropertyType
-                        )
-                    );
-            }
-
-            foreach (T entity in list)
-            {
-                object[] values = new object[properties.Length];
-                for (int i = 0; i < properties.Length; i++)
-                {
-                    values[i] = properties[i].GetValue(entity);
-                }
-
-                dataTable.Rows.Add(values);
-            }
-
-            return dataTable;
-        }
-
         public void Close()
         {
             _closed = true;
@@ -87,7 +54,7 @@ namespace DataReaderTest
 
         public int Depth
         {
-            get { return _items.Rows.Count; }
+            get { throw new NotImplementedException(); }
         }
 
         public int FieldCount
@@ -122,7 +89,7 @@ namespace DataReaderTest
 
         public string GetDataTypeName(int ordinal)
         {
-            return _items.Columns[ordinal].DataType.Name;
+            return _schema.Columns[ordinal].DataType.Name;
         }
 
         public DateTime GetDateTime(int ordinal)
@@ -142,12 +109,12 @@ namespace DataReaderTest
 
         public System.Collections.IEnumerator GetEnumerator()
         {
-            return _items.Rows.GetEnumerator();
+            return _enumerator;
         }
 
         public Type GetFieldType(int ordinal)
         {
-            return _items.Columns[ordinal].DataType;
+            return _schema.Columns[ordinal].DataType;
         }
 
         public float GetFloat(int ordinal)
@@ -177,7 +144,7 @@ namespace DataReaderTest
 
         public string GetName(int ordinal)
         {
-            return _items.Columns[ordinal].ColumnName;
+            return _schema.Columns[ordinal].ColumnName;
         }
 
         public int GetOrdinal(string name)
@@ -190,7 +157,7 @@ namespace DataReaderTest
 
         public DataTable GetSchemaTable()
         {
-            return _items.Clone();
+            return _schema.Clone();
         }
 
         public string GetString(int ordinal)
@@ -205,13 +172,13 @@ namespace DataReaderTest
 
         public int GetValues(object[] values)
         {
-            values = _items.Rows[_current].ItemArray;
-            return _items.Rows[_current].ItemArray.Length;
+            values = _converter.GetRow(_currentItem, _schema).ItemArray;
+            return values.Length;
         }
 
         public bool HasRows
         {
-            get { return _items.Rows.Count > 0; }
+            get { return _items.Any(); }
         }
 
         public bool IsClosed
@@ -221,22 +188,29 @@ namespace DataReaderTest
 
         public bool IsDBNull(int ordinal)
         {
-            return _items.Rows[_current][ordinal] == null;
+            return _currentItem == null;
         }
 
         public bool NextResult()
         {
-            return ++_current <= _items.Rows.Count - 1;
+            return MoveNext();
+        }
+
+        private bool MoveNext()
+        {
+            var didMove = _enumerator.MoveNext();
+            _currentItem = _enumerator.Current;
+            return didMove;
         }
 
         public bool Read()
         {
-            return ++_current < _items.Rows.Count;
+            return MoveNext();
         }
 
         public int RecordsAffected
         {
-            get { return _current; }
+            get { return 0; }
         }
 
         public object this[string name]
@@ -244,13 +218,13 @@ namespace DataReaderTest
             get
             {
                 var ordinal = GetOrdinal(name);
-                return _items.Rows[_current][ordinal];
+                return GetFieldValue<object>(ordinal);
             }
         }
 
         public object this[int ordinal]
         {
-            get { return _items.Rows[_current][_current]; }
+            get { return GetFieldValue<object>(ordinal); }
         }
 
         public void Dispose()
@@ -265,7 +239,7 @@ namespace DataReaderTest
 
         private TColType GetFieldValue<TColType>(int ordinal)
         {
-            if (_current == -1)
+            if (_currentItem == null)
             {
                 throw new InvalidOperationException("Cannot get value before calling Read()");
             }
@@ -273,8 +247,9 @@ namespace DataReaderTest
             {
                 throw new ArgumentOutOfRangeException("ordinal");
             }
-            
-            return (TColType)_items.Rows[_current][ordinal];
+
+            var current = _converter.GetRow(_currentItem, _schema);
+            return (TColType)current[ordinal];
         }
     }
 }
