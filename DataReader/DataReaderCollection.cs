@@ -24,7 +24,7 @@ namespace DataReaderTest
         public DataReaderCollection(IEnumerable<T> items)
         {
             _items = items;
-            _schema = _converter.CreateSchemaOnlyTable<T>();
+            _schema = _converter.CreateSchemaOnlyTable();
             _ordinals = GetOrdinalsFrom(_schema);
             _enumerator = _items.GetEnumerator();
             _currentItem = _enumerator.Current;

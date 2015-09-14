@@ -29,7 +29,7 @@ namespace DataReaderTest.Converters
         /// <remarks>http://stackoverflow.com/questions/18746064/using-reflection-to-create-a-datatable-from-a-class</remarks>
         /// <param name="list"></param>
         /// <returns></returns>
-        public DataTable CreateDataTable<T>(IEnumerable<T> list)
+        public DataTable CreateDataTable(IEnumerable<T> list)
         {
             DataTable dataTable = new DataTable();
             foreach (PropertyInfo info in _properties)
@@ -44,14 +44,14 @@ namespace DataReaderTest.Converters
 
             foreach (T entity in list)
             {
-                object[] values = GetRowFrom<T>(entity);
+                object[] values = GetRowFrom(entity);
                 dataTable.Rows.Add(values);
             }
 
             return dataTable;
         }
 
-        private object[] GetRowFrom<T>(T entity)
+        private object[] GetRowFrom(T entity)
         {
             object[] values = new object[_properties.Length];
             for (int i = 0; i < _properties.Length; i++)
@@ -61,12 +61,12 @@ namespace DataReaderTest.Converters
             return values;
         }
 
-        private void Fill<T>(DataRow row, T entity)
+        private void Fill(DataRow row, T entity)
         {
             row.ItemArray = GetRowFrom(entity);
         }
 
-        public DataTable CreateSchemaOnlyTable<T>()
+        public DataTable CreateSchemaOnlyTable()
         {
             DataTable dataTable = new DataTable();
             foreach (PropertyInfo info in _properties)
@@ -81,7 +81,7 @@ namespace DataReaderTest.Converters
             return dataTable;
         }
 
-        public IEnumerable<DataRow> StreamRows<T>(IEnumerable<T> list, DataTable dataTable)
+        public IEnumerable<DataRow> StreamRows(IEnumerable<T> list, DataTable dataTable)
         {
             foreach (T entity in list)
             {
@@ -90,7 +90,7 @@ namespace DataReaderTest.Converters
             }
         }
 
-        public DataRow GetRow<T>(T entity, DataTable schemaTable)
+        public DataRow GetRow(T entity, DataTable schemaTable)
         {
             var row = schemaTable.NewRow();
             Fill(row, entity);
