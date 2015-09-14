@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\GenericListToDataTableConverter.cs" />
+    <Compile Include="DataAccess\BulkDataImporter.cs" />
     <Compile Include="Entities\Customer.cs" />
     <Compile Include="DataAccess\CustomerDataAccess.cs" />
     <Compile Include="DataAccess\DataAccessBase.cs" />

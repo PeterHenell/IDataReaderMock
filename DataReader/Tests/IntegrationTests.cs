@@ -1,5 +1,4 @@
 ﻿using DataReaderTest.DataAccess;
-using FizzWare.NBuilder;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -11,14 +10,19 @@ namespace DataReaderTest.Tests
 {
     public class IntegrationTests
     {
-        CustomerDataAccess _dao = new CustomerDataAccess();
-
+        BulkDataImporter _dao = new BulkDataImporter("Server=.;Initial Catalog=TestDB;Integrated Security=true;");
+        
         [Test]
         public void ShouldInsert1000Rows()
         {
-            var customers = Builder<Customer>.CreateListOfSize(100000).Build();
+            // Using NBuilder from Fizzware to generate a list of customers
+            // https://github.com/garethdown44/nbuilder/
+            var customers = FizzWare.NBuilder
+                .Builder<Customer>
+                .CreateListOfSize(100000)
+                .Build();
 
-            _dao.InsertMany(customers);
+            _dao.InsertMany<Customer>(customers, "Customer");
         }
     }
 }
