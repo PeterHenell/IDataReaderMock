@@ -15,7 +15,14 @@ The source parameter will not be consumed/iterated until the IDataReader interfa
 ## How to use
 Simply create a new instance of DataReaderCollection<T>, supply any IEnumerable<T> as parameter.
 
-        var col = new DataReaderCollection<T>(entities);
+        var customers = new List<Customer> { 
+                new Customer {
+                    Name = "Peter",
+                    Age = 29,
+                    YearlyBonus = 100000000L
+                }
+        };
+        var col = new DataReaderCollection<T>(customers);
 
 Now you can use this collection as a mock of an actual SqlCommand.ExecuteReader() call:
 
