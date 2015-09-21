@@ -18,6 +18,7 @@ Simply create a new instance of DataReaderCollection<T>, supply any IEnumerable<
         var col = new DataReaderCollection<T>(entities);
 
 Now you can use this collection as a mock of an actual SqlCommand.ExecuteReader() call:
+
         public void Fill(IDataReader reader, List<Customer> customers)
         {
             while (reader.Read())
