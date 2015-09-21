@@ -8,6 +8,7 @@ namespace DataReaderTest
     public class Customer
     {
         public String Name { get; set; }
+        public string Longname { get; set; }
         public int Age { get; set; }
         public long YearlyBonus { get; set; }
     }

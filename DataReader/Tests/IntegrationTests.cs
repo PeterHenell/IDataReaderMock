@@ -24,7 +24,8 @@ namespace DataReaderTest.Tests
             var customers = Builder<Customer>
                 .CreateListOfSize(100000)
                 .All()
-                    .With(c => c.Name = Faker.Name.GetName())
+                    .With(c => c.Name = Faker.Company.GetName())
+                    .With(c => c.Longname = Faker.Company.GetName())
                 .Build();
 
             _dao.InsertMany<Customer>(customers, "Customer");
