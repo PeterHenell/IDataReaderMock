@@ -31,7 +31,7 @@ namespace DataReaderTest
             Assert.That(col.GetString(0), Is.EqualTo("Peter"));
 
             Assert.That(col.GetInt32(col.GetOrdinal("Age")), Is.EqualTo(29));
-            Assert.That(col.GetInt32(1), Is.EqualTo(29));
+            Assert.That(col.GetInt32(2), Is.EqualTo(29));
 
         }
 
@@ -50,7 +50,7 @@ namespace DataReaderTest
                 Assert.That(col.GetString(0), Is.EqualTo("Name" + i.ToString()));
 
                 Assert.That(col.GetInt32(col.GetOrdinal("Age")), Is.EqualTo(i));
-                Assert.That(col.GetInt32(1), Is.EqualTo(i));
+                Assert.That(col.GetInt32(2), Is.EqualTo(i));
             }
             Assert.That(i, Is.EqualTo(10));
         }
@@ -61,13 +61,14 @@ namespace DataReaderTest
             var customers = new List<Customer> { 
                 new Customer {
                     Name = "Peter",
+                    // Longname = 
                     Age = 29
                 }
             };
             var col = new DataReaderCollection<Customer>(customers);
 
             Assert.That(col.GetOrdinal("Name"), Is.EqualTo(0));
-            Assert.That(col.GetOrdinal("Age"), Is.EqualTo(1));
+            Assert.That(col.GetOrdinal("Age"), Is.EqualTo(2));
         }
 
         [Test]
@@ -99,9 +100,9 @@ namespace DataReaderTest
             };
             var col = new DataReaderCollection<Customer>(customers);
 
-            Assert.That(col.GetFieldType(0), Is.EqualTo(typeof(string)));
-            Assert.That(col.GetFieldType(1), Is.EqualTo(typeof(int)));
-            Assert.That(col.GetFieldType(2), Is.EqualTo(typeof(long)));
+            Assert.That(col.GetFieldType(1), Is.EqualTo(typeof(string)));
+            Assert.That(col.GetFieldType(2), Is.EqualTo(typeof(int)));
+            Assert.That(col.GetFieldType(3), Is.EqualTo(typeof(long)));
         }
 
         [Test]

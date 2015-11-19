@@ -3,12 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataReaderTest", "DataReader\DataReaderTest.csproj", "{E8BAF70A-ED66-42E9-B8B4-DA1E72A0AD71}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataReaderCollection", "DataReader\DataReaderCollection.csproj", "{E8BAF70A-ED66-42E9-B8B4-DA1E72A0AD71}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B1C14C55-FB51-400A-88A5-0CD2FAF8C6A4}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataReader.Tests", "DataReader.Tests\DataReader.Tests.csproj", "{8CF5027C-A4AF-4F35-BC5B-87391F168A48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +19,10 @@ Global
 		{E8BAF70A-ED66-42E9-B8B4-DA1E72A0AD71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8BAF70A-ED66-42E9-B8B4-DA1E72A0AD71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8BAF70A-ED66-42E9-B8B4-DA1E72A0AD71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CF5027C-A4AF-4F35-BC5B-87391F168A48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CF5027C-A4AF-4F35-BC5B-87391F168A48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CF5027C-A4AF-4F35-BC5B-87391F168A48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CF5027C-A4AF-4F35-BC5B-87391F168A48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

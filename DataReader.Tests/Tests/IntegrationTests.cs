@@ -15,6 +15,7 @@ namespace DataReaderTest.Tests
         BulkDataImporter _dao = new BulkDataImporter("Server=.;Initial Catalog=TestDB;Integrated Security=true;");
 
         [Test]
+        [Ignore]
         public void ShouldInsert1000Rows()
         {
             // Using NBuilder to generate a list of customers
@@ -24,11 +25,11 @@ namespace DataReaderTest.Tests
             var customers = Builder<Customer>
                 .CreateListOfSize(100000)
                 .All()
-                    .With(c => c.Name = Faker.Company.GetName())
-                    .With(c => c.Longname = Faker.Company.GetName())
+                    .With(c => c.Name = Faker.Company.Name())
+                    .With(c => c.Longname = Faker.Company.Name())
                 .Build();
 
-            _dao.InsertMany<Customer>(customers, "Customer");
+            //_dao.InsertMany<Customer>(customers, "Customer");
         }
 
         [Test]
@@ -37,7 +38,7 @@ namespace DataReaderTest.Tests
             var customers = Builder<Person>
                 .CreateListOfSize(100000)
                 .All()
-                    .With(c => c.Name = Faker.Name.GetName())
+                    .With(c => c.Name = Faker.Name.FullName())
                 .Build();
             var count = customers.Count();
         }
