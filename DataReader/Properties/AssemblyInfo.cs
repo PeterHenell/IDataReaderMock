@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("DataReaderTest")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("AB Svensk Exportkredit")]
+[assembly: AssemblyCompany("Peter Henell")]
 [assembly: AssemblyProduct("DataReaderTest")]
-[assembly: AssemblyCopyright("Copyright © AB Svensk Exportkredit 2015")]
+[assembly: AssemblyCopyright("Copyright © Peter Henell 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
