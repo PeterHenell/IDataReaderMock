@@ -1,3 +1,5 @@
 packages/
 DataReader/obj/
 DataReader/bin/
+DataReader.Tests/bin/
+DataReader.Tests/obj/
